@@ -3,13 +3,11 @@ import { useState, MouseEvent, DragEvent, TouchEventHandler } from "react";
 export default ({
   children,
   tab,
-  index,
   setTabs,
   Tabs,
 }: {
   children: React.ReactNode;
   tab: { id: number; name: string };
-  index: number;
   setTabs: (tabs: { id: number; name: string }[]) => void;
   Tabs: any;
 }) => {
@@ -40,7 +38,7 @@ export default ({
         transform: "translate(-50%,-50%)",
       }}
     >
-      {/* Tab content */}
+      {/* Simple default tab design */}
       <div className="w-full bg-gray-400 text-black">
         <p>
           ${tab.id} {tab.name}
@@ -49,7 +47,7 @@ export default ({
           onClick={(event: MouseEvent<HTMLSpanElement>) => {
             event.preventDefault();
             let newTabs = Tabs.filter(
-              (_: any, tabIndex: number) => tabIndex !== index
+              (tabItem: { id: number; name: string }) => tabItem.id !== tab.id
             );
             setTabs(newTabs);
           }}
@@ -58,6 +56,7 @@ export default ({
           X
         </span>
       </div>
+      {/* Tab content */}
       {children}
     </div>
   );
