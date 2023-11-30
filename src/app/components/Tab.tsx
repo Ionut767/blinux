@@ -1,4 +1,4 @@
-import { useState, MouseEvent, DragEvent } from "react";
+import { useState, MouseEvent, DragEvent, TouchEventHandler } from "react";
 
 export default ({
   children,
@@ -14,44 +14,51 @@ export default ({
   Tabs: any;
 }) => {
   const [position, setPosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
+    x: 10,
+    y: 10,
   });
-
+  const [size, setSize] = useState<{ w: number; h: number }>({
+    w: 200,
+    h: 100,
+  });
   const onDrag = (event: DragEvent<HTMLDivElement>) => {
     setPosition({ x: event.clientX, y: event.clientY });
   };
-
   return (
     <div
       draggable
       onDrag={onDrag}
       onDragEnd={onDrag}
-      className="bg-green-200 m-1 flex flex-row top-0"
+      className="m-1 flex flex-col bg-gray-300 border-2 border-black"
       key={tab.id}
       style={{
         position: "fixed",
         left: `${position.x}px`,
         top: `${position.y}px`,
+        width: `${size.w}px`,
+        height: `${size.h}px`,
         transform: "translate(-50%,-50%)",
       }}
     >
       {/* Tab content */}
-      <p>
-        {tab.id} is {tab.name}
-      </p>
-      <span
-        onClick={(event: MouseEvent<HTMLSpanElement>) => {
-          event.preventDefault();
-          let newTabs = Tabs.filter(
-            (_: any, tabIndex: number) => tabIndex !== index
-          );
-          setTabs(newTabs);
-        }}
-        className="text-red-800 mx-1"
-      >
-        X
-      </span>
+      <div className="w-full bg-gray-400 text-black">
+        <p>
+          ${tab.id} {tab.name}
+        </p>
+        <span
+          onClick={(event: MouseEvent<HTMLSpanElement>) => {
+            event.preventDefault();
+            let newTabs = Tabs.filter(
+              (_: any, tabIndex: number) => tabIndex !== index
+            );
+            setTabs(newTabs);
+          }}
+          className="text-red-800"
+        >
+          X
+        </span>
+      </div>
+      {children}
     </div>
   );
 };
