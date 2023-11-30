@@ -1,6 +1,7 @@
 "use client";
 import MenuBar from "./components/MenuBar";
 import { useState, useCallback, useEffect } from "react";
+import Tab from "./components/Tab";
 
 export default function Home() {
   const [Tabs, setTabs] = useState<{ id: number; name: string }[]>([]);
@@ -20,23 +21,40 @@ export default function Home() {
         <p>Hello Space-1</p>
         {Tabs.length !== 0 &&
           Tabs.map((tab, index) => (
-            <div className="bg-green-200 m-1 flex flex-row top-0" key={index}>
-              {/* Tab content */}
-              <p>
-                {tab.id} is {tab.name}
-              </p>
-              <span
-                onClick={() => {
-                  let newTabs = Tabs.filter(
-                    (_, tabIndex) => tabIndex !== index
-                  );
-                  setTabs(newTabs);
-                }}
-                className="text-red-800 mx-1"
-              >
-                X
-              </span>
-            </div>
+            <Tab
+              key={index}
+              tab={tab}
+              index={index}
+              setTabs={setTabs}
+              Tabs={Tabs}
+            >
+              {" "}
+              Hello{" "}
+            </Tab>
+            // <div
+            //   draggable
+            //   onDrag={() => {
+            //     console.log("Drag!!");
+            //   }}
+            //   className="bg-green-200 m-1 flex flex-row top-0"
+            //   key={index}
+            // >
+            //   {/* Tab content */}
+            //   <p>
+            //     {tab.id} is {tab.name}
+            //   </p>
+            //   <span
+            //     onClick={() => {
+            //       let newTabs = Tabs.filter(
+            //         (_, tabIndex) => tabIndex !== index
+            //       );
+            //       setTabs(newTabs);
+            //     }}
+            //     className="text-red-800 mx-1"
+            //   >
+            //     X
+            //   </span>
+            // </div>
           ))}
       </main>
       <MenuBar OpenTab={OpenTab} />
