@@ -1,4 +1,4 @@
-import { useState, MouseEvent, DragEvent, TouchEventHandler } from "react";
+import { useState, MouseEvent, DragEvent, useRef } from "react";
 
 export default ({
   children,
@@ -7,56 +7,75 @@ export default ({
   Tabs,
 }: {
   children: React.ReactNode;
-  tab: { id: number; name: string };
-  setTabs: (tabs: { id: number; name: string }[]) => void;
-  Tabs: any;
+  tab: { id: number; name: string; zindex: number };
+  setTabs: (tab: { id: number; name: string; zindex: number }[]) => void;
+  Tabs: { id: number; name: string; zindex: number }[];
 }) => {
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: 10,
     y: 10,
   });
-  const [size, setSize] = useState<{ w: number; h: number }>({
-    w: 200,
-    h: 100,
+  const [offset, setOffset] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
   });
-  const onDrag = (event: DragEvent<HTMLDivElement>) => {
-    setPosition({ x: event.clientX, y: event.clientY });
+
+  const onDragStart = (event: DragEvent<HTMLDivElement>) => {
+    setOffset({ x: event.clientX - position.x, y: event.clientY - position.y });
+
+    const newTabs = Tabs.map((tabItem) => {
+      if (tabItem.id === tab.id) {
+        const newZindex =
+          Math.max(...Tabs.map((t) => t.zindex), tabItem.zindex) + 1;
+        return {
+          ...tabItem,
+          zindex: tabItem.zindex === newZindex ? tabItem.zindex : newZindex,
+        };
+      }
+      return tabItem;
+    });
+
+    setTabs(newTabs);
+
+    const img = new Image();
+    event.dataTransfer.setDragImage(img, 0, 0);
   };
+
+  const onDrag = (event: DragEvent<HTMLDivElement>) => {
+    setPosition({ x: event.clientX - offset.x, y: event.clientY - offset.y });
+  };
+
   return (
     <div
       draggable
+      onDragStart={onDragStart}
       onDrag={onDrag}
       onDragEnd={onDrag}
-      className="m-1 flex flex-col bg-gray-300 border-2 border-black"
+      className="m-1 flex flex-col bg-gray-300 border-2 border-black resize"
       key={tab.id}
       style={{
         position: "fixed",
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: `${size.w}px`,
-        height: `${size.h}px`,
         transform: "translate(-50%,-50%)",
+        zIndex: tab.zindex,
       }}
     >
-      {/* Simple default tab design */}
-      <div className="w-full bg-gray-400 text-black">
+      <div className="flex flex-row justify-between w-full bg-gray-400 text-black">
         <p>
           ${tab.id} {tab.name}
         </p>
         <span
           onClick={(event: MouseEvent<HTMLSpanElement>) => {
             event.preventDefault();
-            let newTabs = Tabs.filter(
-              (tabItem: { id: number; name: string }) => tabItem.id !== tab.id
-            );
+            const newTabs = Tabs.filter((tabItem) => tabItem.id !== tab.id);
             setTabs(newTabs);
           }}
-          className="text-red-800"
+          className="text-red-800 p-1"
         >
           X
         </span>
       </div>
-      {/* Tab content */}
       {children}
     </div>
   );
