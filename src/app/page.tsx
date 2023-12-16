@@ -34,7 +34,7 @@ export default function Home() {
       <main>
         {Tabs.map((tab) => (
           <Tab key={tab.id} tab={tab} setTabs={setTabs} Tabs={Tabs}>
-            <p>This is a code =P My id is the $ above!!!</p>
+            <input />
           </Tab>
         ))}
       </main>

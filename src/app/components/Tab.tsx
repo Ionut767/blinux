@@ -57,6 +57,8 @@ export default ({
         position: "fixed",
         left: `${position.x}px`,
         top: `${position.y}px`,
+        width: `40vw`,
+        height: `30vh`,
         transform: "translate(-50%,-50%)",
         zIndex: tab.zindex,
       }}

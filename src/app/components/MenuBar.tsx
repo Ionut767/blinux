@@ -5,7 +5,7 @@ export default ({
   OpenTab: (tab: { name: string }) => void;
 }) => {
   return (
-    <footer className="flex flex-row w-screen h-[5vh] absolute bottom-0 bg-gray-600/30 backdrop-blur-sm">
+    <footer className="flex flex-row w-screen h-[5vh] absolute bottom-0 bg-gray-600/30 backdrop-blur-sm z-[9999]">
       {/* Array with apps name */}
       {["C#", "C++"].map((e, index) => (
         <p
